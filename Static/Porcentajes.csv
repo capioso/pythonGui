@@ -1,0 +1,7 @@
+,,%,FORMULA,META 2022,UNIDAD DE MEDIDA,PERIODO O FRECUENCIA,MAYOR ES MEJOR,PROCESO FUENTE DE DATOS
+Caracteristicas de actos inseguros ,INDICADOR CUMPLIDO EPP,"40,00 %",Cumplimientouso EPP=((Nro. De trabajadores que usan EPP corectamente/ Total de trabajadores)*100,<10,%,MENSUAL,no,Caracteristicas de actos inseguros 
+,INDICADOR CUMPLIDO  REPORTE DE INCIDENTES,"25,00 %",Cumplimiento reporte de incidentes=((Nro. De incidentes reportados)/(Total de incidente ocurridos))∗100,>90,%,MENSUAL,no,Caracteristicas de actos inseguros 
+,INDICADOR CUMPLIDO  ACTITUS SEGURA,"90,00 %",Cumplimientodeactitudsegura=Nro.total que cumplen la actitudes seguras/(numero  total de empleados)*100,>90,%,MENSUAL,no,Caracteristicas de actos inseguros 
+Caracteristicas de condiciones inseguras ,Cumplimiento plan capacitaciones,"55,00 %",Cumplimiento de capacitaciones =Número de capacitaciones ejecutadas/Número de capacitaciones programadas x 100%,>80,%,MENSUAL,no,Caracteristicas de condicion insegura
+,Reducción de condiciones inseguras,"25,00 %",Cumplimiento de reduccion de condiciones inseguras= (Número de condiciones peligrosas intervenidas / Número de condiciones peligrosas reportadas) x 100,<10,%,MENSUAL,no,Caracteristicas de condicion insegura
+,Cumplimiento de inspecciones  de seguridad ,"90,00 %",Cumplimiento de inspecciones de seguridad= (Número de inspecciones completadas / Número de inspecciones programadas) x 100.,>82,%,MENSUAL,no,Caracteristicas de condicion insegura
