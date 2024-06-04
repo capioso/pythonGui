@@ -26,8 +26,7 @@ class CentralPageController:
     def changeToPage2(self):
         self.option = 2
         self.view.reborn()
-        view = CostsProjectionPageView(self.view.getPanel())
-
+        CostsProjectionPageView(self.view.getPanel())
 
     def changeToPage3(self):
         self.option = 3
