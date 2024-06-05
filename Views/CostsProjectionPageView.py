@@ -35,7 +35,7 @@ class CostsProjectionPageView:
          .grid(column=0, row=15, padx=10, pady=25))
 
         self.n = tk.StringVar()
-        monthPicker = ttk.Combobox(subpanel,
+        yearPicker = ttk.Combobox(subpanel,
                                    width=10,
                                    justify="center",
                                    height=10,
@@ -44,9 +44,9 @@ class CostsProjectionPageView:
                                    background="white",
                                    foreground="black",
                                    font=("Times New Roman", 12, "bold"))
-        monthPicker['values'] = sorted(set(int(year) for year in self.years))
-        monthPicker.grid(column=1, row=15)
-        monthPicker.bind("<<ComboboxSelected>>", self.onYearSelect)
+        yearPicker['values'] = sorted(set(int(year) for year in self.years))
+        yearPicker.grid(column=1, row=15)
+        yearPicker.bind("<<ComboboxSelected>>", self.onYearSelect)
 
     def onYearSelect(self, event):
         self.selected_year = self.n.get()
