@@ -18,11 +18,26 @@ class CostsProjectionPageView:
         self.years = CostsProjectionPageView.dataset.iloc[1:, 0]
         self.root = root
         self.panel = tk.Frame(self.root, bg="white", height=550)
-        self.panel.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        self.panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, pady=10)
 
-        self.image_label = tk.Label(self.root, bg="white", width=900, height=500)
-        self.image_label.pack(pady=20)
+        self.image_label = tk.Label(self.root, bg="white")
         self.createMenu()
+
+        self.canvas = tk.Canvas(self.panel, bg="white")
+        self.scroll_y = tk.Scrollbar(self.panel, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scroll_y.set)
+
+        self.canvas.pack(side=tk.LEFT, fill="both", expand=True)
+        self.scroll_y.pack(side=tk.RIGHT, fill="y")
+
+        self.canvas.create_window((0, 0), window=self.image_label, anchor="nw")
+        self.canvas.move("all", 325, 5)
+        self.canvas.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
 
     def createMenu(self):
         subpanel = tk.Frame(self.panel, bg="white", height=50)
@@ -36,14 +51,14 @@ class CostsProjectionPageView:
 
         self.n = tk.StringVar()
         yearPicker = ttk.Combobox(subpanel,
-                                   width=10,
-                                   justify="center",
-                                   height=10,
-                                   textvariable=self.n,
-                                   state="readonly",
-                                   background="white",
-                                   foreground="black",
-                                   font=("Times New Roman", 12, "bold"))
+                                  width=10,
+                                  justify="center",
+                                  height=10,
+                                  textvariable=self.n,
+                                  state="readonly",
+                                  background="white",
+                                  foreground="black",
+                                  font=("Times New Roman", 12, "bold"))
         yearPicker['values'] = sorted(set(int(year) for year in self.years))
         yearPicker.grid(column=1, row=15)
         yearPicker.bind("<<ComboboxSelected>>", self.onYearSelect)
@@ -89,19 +104,15 @@ class CostsProjectionPageView:
 
         canvas = FigureCanvasAgg(fig)
         canvas.draw()
-
         buffer = BytesIO()
         canvas.print_png(buffer)
         buffer.seek(0)
         image = Image.open(buffer)
-
         width, height = image.size
-        aspect_ratio = width / height
-
-        max_height = 400
-        max_width = int(max_height * aspect_ratio)
-        resized_image = image.resize((max_width, max_height), Image.FIXED)
-
+        max_height = height
+        max_width = 800
+        resized_image = image.resize((max_width, max_height))
         graph_image = ImageTk.PhotoImage(resized_image)
         self.image_label.config(image=graph_image)
         self.image_label.image = graph_image
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))

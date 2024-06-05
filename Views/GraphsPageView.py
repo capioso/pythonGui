@@ -24,17 +24,14 @@ class GraphsPageView:
         self.root = root
         self.panel = tk.Frame(self.root, bg="white", height=550)
         self.panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, pady=10)
-
-        self.image_label = tk.Label(self.root, bg="white", width=900, height=500)
         self.createMenu()
 
         self.canvas = tk.Canvas(self.panel, bg="white")
-        self.scroll_y = tk.Scrollbar(self.panel, orient="vertical", command=self.canvas.yview)
+        self.scroll_y = tk.Scrollbar(self.canvas, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scroll_y.set)
 
-        self.canvas.pack(side=tk.LEFT, fill="both", expand=True)
+        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
         self.scroll_y.pack(side=tk.RIGHT, fill="y")
-
         self.image_label = tk.Label(self.canvas, bg="white")
         self.canvas.create_window((0, 0), window=self.image_label, anchor="nw")
         self.canvas.move("all", 325, 5)
