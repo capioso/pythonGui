@@ -24,6 +24,7 @@ class MainPageController:
         root = self.view.getRoot()
         root.destroy()
         root = tk.Tk()
+        root.resizable(False, False)
         view = CentralPageView(root)
         controller = CentralPageController(view, option)
         controller.addButtons()
