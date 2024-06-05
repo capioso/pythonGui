@@ -149,7 +149,6 @@ class GraphsPageView:
             x = ['AREA 1', 'AREA 2', 'AREA 3', 'AREA 4', 'AREA 5', 'AREA 6']
             fig, axs = plt.subplots(7, 1, figsize=(10, 16))
 
-            # Flatten the array of axes
             axs = axs.flatten()
 
             axs[0].plot(x, y1, label='Herida punzo cortante', color='blue')
@@ -196,7 +195,6 @@ class GraphsPageView:
             x = ['AREA 1', 'AREA 2', 'AREA 3', 'AREA 4', 'AREA 5', 'AREA 6']
             fig, axs = plt.subplots(5, 1, figsize=(10, 16))
 
-            # Flatten the array of axes
             axs = axs.flatten()
 
             axs[0].plot(x, y1, label='Cuerpo extraño en ojo', color='blue')

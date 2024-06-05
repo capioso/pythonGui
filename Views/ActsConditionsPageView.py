@@ -46,7 +46,6 @@ class ActsConditionsPageView:
             reader = csv.reader(file)
             next(reader)
             for row in reader:
-                # Reemplazar el caracter \xa0 con %
                 row_values = [value.replace("\xa0", "") for value in row[1:]]
                 self.tree.insert("", "end", text=row[0], values=row_values)
 
