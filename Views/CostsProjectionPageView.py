@@ -45,10 +45,14 @@ class CostsProjectionPageView:
                                 width=20,
                                 text="Cost Prediction",
                                 font=("Times new roman", 12, "bold"),
-                                command=self.grapher)
+                                command=self.Predict)
         self.button.pack(side=tk.LEFT, padx=10, pady=5)
         self.grapher()
         self.canvas.move("all", 325, 5)
+
+    def Predict(self):
+        self.globalData.train()
+        self.grapher()
 
     def grapher(self):
         self.x = self.globalData.getYear()
@@ -61,7 +65,7 @@ class CostsProjectionPageView:
         self.costsT3 = self.globalData.getCostT3()
         self.costsT4 = self.globalData.getCosts()
 
-        fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 14))
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 16))
 
         ax1.plot(self.x, self.y1, label='TAT1', color='blue')
         ax1.set_ylabel('CTAT1')
@@ -165,4 +169,3 @@ class CostsProjectionPageView:
         self.image_label.config(image=graph_image)
         self.image_label.image = graph_image
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        self.globalData.train()
