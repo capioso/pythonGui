@@ -64,21 +64,21 @@ class CostsProjectionPageView:
         fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 14))
 
         ax1.plot(self.x, self.y1, label='TAT1', color='blue')
-        ax1.set_ylabel('TAT1')
+        ax1.set_ylabel('CTAT1')
         ax1.set_title('Frecuencia y Costo de accidentes tipo 1', pad=55, fontname="Times New Roman", fontweight='bold',
                       fontsize=16)
         ax1.legend()
         ax1.grid(True)
 
         ax2.plot(self.x, self.y2, label='TAT2', color='red')
-        ax2.set_ylabel('TAT2')
+        ax2.set_ylabel('CTAT2')
         ax2.set_title('Frecuencia y Costo de accidentes tipo 2', pad=55, fontname="Times New Roman", fontweight='bold',
                       fontsize=16)
         ax2.legend()
         ax2.grid(True)
 
         ax3.plot(self.x, self.y3, label='TAT3', color='magenta')
-        ax3.set_ylabel('TAT3')
+        ax3.set_ylabel('CTAT3')
         ax3.set_title('Frecuencia y Costo de accidentes tipo 3', pad=55, fontname="Times New Roman", fontweight='bold',
                       fontsize=16)
         ax3.legend()
