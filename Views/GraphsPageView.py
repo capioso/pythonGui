@@ -8,10 +8,10 @@ from PIL import Image
 from matplotlib import pyplot as plt, ticker
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
-from Models.AccidenteGlobal import AccidenteGlobal
-from Models.AccidenteTipo1 import AccidenteTipo1
-from Models.AccidenteTipo2 import AccidenteTipo2
-from Models.AccidenteTipo3 import AccidenteTipo3
+from Services.AccidenteGlobal import AccidenteGlobal
+from Services.AccidenteTipo1 import AccidenteTipo1
+from Services.AccidenteTipo2 import AccidenteTipo2
+from Services.AccidenteTipo3 import AccidenteTipo3
 
 
 class GraphsPageView:
@@ -279,6 +279,16 @@ class GraphsPageView:
         ax2.set_xticklabels(x, rotation=45)
         ax3.set_xticks(x)
         ax3.set_xticklabels(x, rotation=45)
+
+        for xi, cost in zip(x, y1):
+            ax1.annotate(f'{cost}', (xi, y1[x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
+        for xi, cost in zip(x, y2):
+            ax2.annotate(f'{cost}', (xi, y2[x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
+        for xi, cost in zip(x, y3):
+            ax3.annotate(f'{cost}', (xi, y3[x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
 
         plt.tight_layout()
         plt.subplots_adjust(hspace=0.5)
