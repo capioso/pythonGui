@@ -1,106 +1,155 @@
 import tkinter as tk
 from io import BytesIO
-from tkinter import ttk
 
-import pandas as pd
 from PIL import Image
 from PIL import ImageTk
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, ticker
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+from Services.AccidenteGlobal import AccidenteGlobal
 
 
 class CostsProjectionPageView:
-    dataset = pd.read_csv(f'Static/CostoxAccidenteT1.csv')
 
     def __init__(self, root):
-        self.selected_year = None
-        self.n = None
-        self.years = CostsProjectionPageView.dataset.iloc[1:, 0]
+        self.globalData = AccidenteGlobal()
+        self.x = self.globalData.getYear()
+        self.x = list(map(int, self.x))
+        self.y1 = self.globalData.getT1()
+        self.y2 = self.globalData.getT2()
+        self.y3 = self.globalData.getT3()
+        self.costsT1 = self.globalData.getCostT1()
+        self.costsT2 = self.globalData.getCostT2()
+        self.costsT3 = self.globalData.getCostT3()
+        self.costsT4 = self.globalData.getCosts()
+
         self.root = root
-        self.panel = tk.Frame(self.root, bg="white", height=550)
+        self.panel = tk.Frame(self.root, bg="white")
         self.panel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, pady=10)
-
-        self.image_label = tk.Label(self.root, bg="white")
-        self.createMenu()
-
-        self.canvas = tk.Canvas(self.panel, bg="white")
-        self.scroll_y = tk.Scrollbar(self.panel, orient="vertical", command=self.canvas.yview)
+        self.canvas = tk.Canvas(self.panel, bg="white", height=500)
+        self.scroll_y = tk.Scrollbar(self.canvas, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scroll_y.set)
-
-        self.canvas.pack(side=tk.LEFT, fill="both", expand=True)
+        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
         self.scroll_y.pack(side=tk.RIGHT, fill="y")
-
+        self.image_label = tk.Label(self.canvas, bg="white")
         self.canvas.create_window((0, 0), window=self.image_label, anchor="nw")
-        self.canvas.move("all", 325, 5)
         self.canvas.bind(
             "<Configure>",
             lambda e: self.canvas.configure(
                 scrollregion=self.canvas.bbox("all")
             )
         )
+        self.button = tk.Button(self.panel,
+                                bg="gray",
+                                foreground="white",
+                                width=20,
+                                text="Cost Prediction",
+                                font=("Times new roman", 12, "bold"),
+                                command=self.grapher)
+        self.button.pack(side=tk.LEFT, padx=10, pady=5)
+        self.grapher()
+        self.canvas.move("all", 325, 5)
 
-    def createMenu(self):
-        subpanel = tk.Frame(self.panel, bg="white", height=50)
-        subpanel.pack(side=tk.BOTTOM, fill=tk.BOTH)
-        (ttk.Label(subpanel,
-                   text="Year",
-                   font=("Times New Roman", 14, "bold"),
-                   padding=10,
-                   background="white")
-         .grid(column=0, row=15, padx=10, pady=25))
+    def grapher(self):
+        self.x = self.globalData.getYear()
+        self.x = list(map(int, self.x))
+        self.y1 = self.globalData.getT1()
+        self.y2 = self.globalData.getT2()
+        self.y3 = self.globalData.getT3()
+        self.costsT1 = self.globalData.getCostT1()
+        self.costsT2 = self.globalData.getCostT2()
+        self.costsT3 = self.globalData.getCostT3()
+        self.costsT4 = self.globalData.getCosts()
 
-        self.n = tk.StringVar()
-        yearPicker = ttk.Combobox(subpanel,
-                                  width=10,
-                                  justify="center",
-                                  height=10,
-                                  textvariable=self.n,
-                                  state="readonly",
-                                  background="white",
-                                  foreground="black",
-                                  font=("Times New Roman", 12, "bold"))
-        yearPicker['values'] = sorted(set(int(year) for year in self.years))
-        yearPicker.grid(column=1, row=15)
-        yearPicker.bind("<<ComboboxSelected>>", self.onYearSelect)
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 14))
 
-    def onYearSelect(self, event):
-        self.selected_year = self.n.get()
-        self.generate_graph(int(self.selected_year) - 2006)
+        ax1.plot(self.x, self.y1, label='TAT1', color='blue')
+        ax1.set_ylabel('TAT1')
+        ax1.set_title('Frecuencia y Costo de accidentes tipo 1', pad=55, fontname="Times New Roman", fontweight='bold',
+                      fontsize=16)
+        ax1.legend()
+        ax1.grid(True)
 
-    def generate_graph(self, year):
-        costoT1 = CostsProjectionPageView.dataset.iloc[1:, 1]
-        frecuenciaT1 = CostsProjectionPageView.dataset.iloc[1:, 2]
+        ax2.plot(self.x, self.y2, label='TAT2', color='red')
+        ax2.set_ylabel('TAT2')
+        ax2.set_title('Frecuencia y Costo de accidentes tipo 2', pad=55, fontname="Times New Roman", fontweight='bold',
+                      fontsize=16)
+        ax2.legend()
+        ax2.grid(True)
 
-        costoT2 = CostsProjectionPageView.dataset.iloc[1:, 3]
-        frecuenciaT2 = CostsProjectionPageView.dataset.iloc[1:, 4]
+        ax3.plot(self.x, self.y3, label='TAT3', color='magenta')
+        ax3.set_ylabel('TAT3')
+        ax3.set_title('Frecuencia y Costo de accidentes tipo 3', pad=55, fontname="Times New Roman", fontweight='bold',
+                      fontsize=16)
+        ax3.legend()
+        ax3.grid(True)
 
-        costoT3 = CostsProjectionPageView.dataset.iloc[1:, 5]
-        frecuenciaT3 = CostsProjectionPageView.dataset.iloc[1:, 6]
+        ax4.plot(self.x, self.costsT4, label='Costo', color='brown')
+        ax4.set_ylabel('Costo')
+        ax4.set_title('Costo por año', pad=55, fontname="Times New Roman", fontweight='bold',
+                      fontsize=16)
+        ax4.legend()
+        ax4.grid(True)
 
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
-        x = ["T1", "T2", "T3"]
-        y1 = [float(costoT1.get(year).replace(",", ".")), float(costoT2.get(year).replace(",", ".")),
-              float(costoT3.get(year).replace(",", "."))]
-        y2 = [float(frecuenciaT1.get(year).replace(",", ".")), float(frecuenciaT2.get(year).replace(",", ".")),
-              float(frecuenciaT3.get(year).replace(",", "."))]
+        ax1.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:.0f}'.format(x)))
+        ax2.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:.0f}'.format(x)))
+        ax3.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:.0f}'.format(x)))
+        ax4.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: '{:.0f}'.format(x)))
 
-        ax1.plot(x, y1, 'g-', marker='o')
-        ax1.set_ylabel('Costo', color='g')
-        ax1.set_title('Costo y Frecuencia en el año {}'.format(year + 2006))
+        for xi in self.x:
+            ax1.axvline(xi, color='gray', linestyle='--', linewidth=0.5)
+            ax2.axvline(xi, color='gray', linestyle='--', linewidth=0.5)
+            ax3.axvline(xi, color='gray', linestyle='--', linewidth=0.5)
+            ax4.axvline(xi, color='gray', linestyle='--', linewidth=0.5)
 
-        ax2.plot(x, y2, 'b-', marker='o')
-        ax2.set_xlabel('X Label')
-        ax2.set_ylabel('Frecuencia', color='b')
+        ax1.set_xticks(self.x)
+        ax1.set_xticklabels(self.x, rotation=45)
+        ax2.set_xticks(self.x)
+        ax2.set_xticklabels(self.x, rotation=45)
+        ax3.set_xticks(self.x)
+        ax3.set_xticklabels(self.x, rotation=45)
+        ax4.set_xticks(self.x)
+        ax4.set_xticklabels(self.x, rotation=45)
 
-        for x_val, y_val in zip(x, y1):
-            ax1.scatter(x_val, y_val, color='g')
-            ax1.text(x_val, y_val, str(y_val), ha='center', va='bottom')
+        for xi, cost in zip(self.x, self.costsT1):
+            formatted_cost = format(cost, '.2f')
+            ax1.annotate(f'{formatted_cost}', (xi, max(self.y1) * 1.2), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.LEFT, fontsize=8, rotation=45)
 
-        for x_val, y_val in zip(x, y2):
-            ax2.scatter(x_val, y_val, color='b')
-            ax2.text(x_val, y_val, str(y_val), ha='center', va='bottom')
+        for xi, cost in zip(self.x, self.y1):
+            ax1.annotate(f'{cost}', (xi, self.y1[self.x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
+
+        for xi, cost in zip(self.x, self.costsT2):
+            formatted_cost = format(cost, '.2f')
+            ax2.annotate(f'{formatted_cost}', (xi, max(self.y2) * 1.2), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.LEFT, fontsize=8, rotation=45)
+
+        for xi, cost in zip(self.x, self.y2):
+            ax2.annotate(f'{cost}', (xi, self.y2[self.x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
+
+        for xi, cost in zip(self.x, self.costsT3):
+            formatted_cost = format(cost, '.2f')
+            ax3.annotate(f'{formatted_cost}', (xi, max(self.y3) * 1.2), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.LEFT, fontsize=8, rotation=45)
+
+        for xi, cost in zip(self.x, self.y3):
+            ax3.annotate(f'{cost}', (xi, self.y3[self.x.index(xi)]), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.CENTER, fontsize=8, fontweight='bold')
+
+        for xi, cost in zip(self.x, self.costsT4):
+            formatted_cost = format(cost, '.2f')
+            ax4.annotate(f'{formatted_cost}', (xi, max(self.costsT4) * 1.2), textcoords="offset points", xytext=(0, 10),
+                         ha=tk.LEFT, fontsize=8, rotation=45)
+
+        ax1.set_ylim(top=max(self.y1) * 1.2)
+        ax2.set_ylim(top=max(self.y2) * 1.2)
+        ax3.set_ylim(top=max(self.y3) * 1.2)
+        ax4.set_ylim(top=max(self.costsT4) * 1.2)
 
         plt.tight_layout()
+        plt.subplots_adjust(hspace=1.0)
 
         canvas = FigureCanvasAgg(fig)
         canvas.draw()
@@ -116,3 +165,4 @@ class CostsProjectionPageView:
         self.image_label.config(image=graph_image)
         self.image_label.image = graph_image
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.globalData.train()
